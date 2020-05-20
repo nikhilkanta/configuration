@@ -109,7 +109,7 @@ fi
 # Required for add-apt-repository
 apt-get install -y software-properties-common
 if [[ "${SHORT_DIST}" != bionic ]] && [[ "${SHORT_DIST}" != xenial ]];then
-  apt-get install -y python-software-properties
+  apt-get install -y python3-software-properties
 fi
 
 # Add git PPA
@@ -123,20 +123,20 @@ if [[ "${SHORT_DIST}" != bionic ]] ;then
 fi
 
 
-# Install python 2.7 latest, git and other common requirements
-# NOTE: This will install the latest version of python 2.7 and
+# Install python 3.5, git and other common requirements
+# NOTE: This will install python 3.5
 # which may differ from what is pinned in virtualenvironments
 apt-get update -y
 
-apt-get install -y python2.7 python2.7-dev python-pip python-apt python-jinja2 build-essential sudo git-core libmysqlclient-dev libffi-dev libssl-dev
+apt-get install -y python3.5 python3.5-dev python3-pip python3-apt python3-jinja2 build-essential sudo git-core libmysqlclient-dev libffi-dev libssl-dev
 
 
-pip install --upgrade pip=="${PIP_VERSION}"
+pip3 install --upgrade pip=="${PIP_VERSION}"
 
 # pip moves to /usr/local/bin when upgraded
 PATH=/usr/local/bin:${PATH}
-pip install setuptools=="${SETUPTOOLS_VERSION}"
-pip install virtualenv=="${VIRTUAL_ENV_VERSION}"
+pip3 install setuptools=="${SETUPTOOLS_VERSION}"
+pip3 install virtualenv=="${VIRTUAL_ENV_VERSION}"
 
 
 if [[ "true" == "${RUN_ANSIBLE}" ]]; then
