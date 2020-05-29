@@ -1,0 +1,8 @@
+- name: Install Prerequisites in the installation server
+  hosts: all
+  become: true
+  vars:
+    ENABLE_INSTALL_PREREQUISITES: true
+  roles:
+    - prerequisites
+      when: ENABLE_INSTALL_PREREQUISITES 

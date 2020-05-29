@@ -1,0 +1,28 @@
+# Install pre requisites to prep the server
+
+- name: Install python software properties
+  shell: "sudo apt-get install -y python-software-properties"
+
+- name: Install ppa: ubuntu toolchain
+  shell: "sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test"
+
+- name: apt update
+  shell: "sudo apt-get update -y"
+
+- name: apt upgrade
+  shell: "sudo apt-get upgrade -y"
+
+- name: Install system pre-requisites
+  apt:
+    name: "{{ system_prerequisites }}"
+    state: present
+    update_cache: yes
+
+- name: pip upgrade
+  shell: "sudo pip install --upgrade pip==9.0.3"
+
+- name: setuptools upgrade
+  shell: "sudo pip install --upgrade setuptools==39.0.1"
+
+- name: virtualenv upgrade
+  shell: "sudo -H pip install --upgrade virtualenv==15.2.0"

@@ -9,6 +9,15 @@
 ##
 
 ##
+## Get IP ADDRESS of server and path to the private key
+##
+read -p "Enter the ip address of the server(e.g: 0.0.0.0): " ip_address
+echo "Installing edx on the server with the ip address: $ip_address"
+
+read -p "Enter the path to the private key of the above server:" path_to_private_key
+echo "The path to private key is at: $path_to_private_key"
+
+##
 ## Sanity checks
 ##
 
@@ -85,26 +94,6 @@ trap finish EXIT
 echo "Installing release '$OPENEDX_RELEASE'"
 
 ##
-## Set ppa repository source for gcc/g++ 4.8 in order to install insights properly
-##
-sudo apt-get install -y python-software-properties
-sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-
-##
-## Update and Upgrade apt packages
-##
-sudo apt-get update -y
-sudo apt-get upgrade -y
-
-##
-## Install system pre-requisites
-##
-sudo apt-get install -y build-essential software-properties-common curl git-core libxml2-dev libxslt1-dev python-pip libmysqlclient-dev python-apt python-dev libxmlsec1-dev libfreetype6-dev swig gcc g++
-sudo pip install --upgrade pip==9.0.3
-sudo pip install --upgrade setuptools==39.0.1
-sudo -H pip install --upgrade virtualenv==15.2.0
-
-##
 ## Overridable version variables in the playbooks. Each can be overridden
 ## individually, or with $OPENEDX_RELEASE.
 ##
@@ -139,6 +128,11 @@ if [[ -f my-passwords.yml ]]; then
     EXTRA_VARS="-e@$(pwd)/my-passwords.yml $EXTRA_VARS"
 fi
 
+# extra-vars.yml is the file for extra variables
+if [[ -f extra-vars.yml ]]; then
+    EXTRA_VARS="-e@$(pwd)/extra-vars.yml $EXTRA_VARS"
+fi
+
 EXTRA_VARS="-e@$(pwd)/config.yml $EXTRA_VARS"
 
 CONFIGURATION_VERSION=${CONFIGURATION_VERSION-$OPENEDX_RELEASE}
@@ -146,8 +140,8 @@ CONFIGURATION_VERSION=${CONFIGURATION_VERSION-$OPENEDX_RELEASE}
 ##
 ## Clone the configuration repository and run Ansible
 ##
-cd /var/tmp
-git clone https://github.com/edx/configuration
+cd /var/tmp/
+git clone https://github.com/nikhilkanta/configuration
 cd configuration
 git checkout $CONFIGURATION_VERSION
 git pull
@@ -159,9 +153,13 @@ cd /var/tmp/configuration
 sudo -H pip install -r requirements.txt
 
 ##
+## Install System pre-requisites
+## 
+cd /var/tmp/configuration/playbooks && sudo -E ansible-playbook -vvv --user=ubuntu --private-key=$path_to_private_key ./install_prerequisites.yml -i "$ip_address,"
+##
 ## Run the openedx_native.yml playbook in the configuration/playbooks directory
 ##
-cd /var/tmp/configuration/playbooks && sudo -E ansible-playbook -c local ./openedx_native.yml -i "localhost," $EXTRA_VARS "$@"
+cd /var/tmp/configuration/playbooks && sudo -E ansible-playbook -vvv --user=ubuntu --private-key=$path_to_private_key ./openedx_native.yml -i "$ip_address," $EXTRA_VARS "$@"
 ansible_status=$?
 
 if [[ $ansible_status -ne 0 ]]; then
