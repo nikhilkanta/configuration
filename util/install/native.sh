@@ -156,8 +156,9 @@ git pull
 ##
 ## Install the ansible requirements
 ##
-cd /var/tmp/configuration
-sudo -H pip install -r requirements.txt
+# cd /var/tmp/configuration
+# sudo -H pip install -r requirements.txt
+# Since director will have already configured this
 
 ##
 ## Install System pre-requisites
