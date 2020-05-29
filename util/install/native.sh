@@ -13,7 +13,7 @@
 ##
 
 brkvar=N
-while [[ $brkvar =~ ^([nN]{[oO]|[nN] ]]
+while [[ ! $brkvar =~ ^([yY][eE][sS]|[yY] ]]
 do
   read -p "Enter the ip address of the server(e.g: 0.0.0.0): " ip_address
   echo "Installing edx on the server with the ip address: $ip_address"
