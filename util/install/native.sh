@@ -11,18 +11,23 @@
 ##
 ## Get IP ADDRESS of server and path to the private key
 ##
+## Get this from a file instead
+#brkvar=N
+#while [[ ! $brkvar =~ ^([yY][eE][sS]|[yY])$ ]]
+#do
+ # read -p "Enter the ip address of the server(e.g: 0.0.0.0): " ip_address
+  #echo "Installing edx on the server with the ip address: $ip_address"
 
-brkvar=N
-while [[ ! $brkvar =~ ^([yY][eE][sS]|[yY])$ ]]
-do
-  read -p "Enter the ip address of the server(e.g: 0.0.0.0): " ip_address
-  echo "Installing edx on the server with the ip address: $ip_address"
+ # read -p "Enter the path to the private key of the above server:" path_to_private_key
+ # echo "The path to private key is at: $path_to_private_key"
 
-  read -p "Enter the path to the private key of the above server:" path_to_private_key
-  echo "The path to private key is at: $path_to_private_key"
+ # read -p "Are the ip address and path right [y/N]: " brkvar
+#done
 
-  read -p "Are the ip address and path right [y/N]: " brkvar
-done
+cd ~
+source server-vars.txt
+echo "Installting edx-platform on the server with the ip address: $ip_address"
+echo "The path to the private key of the server is at: $path_to_private_key"
 
 ##
 ## Sanity checks
@@ -147,9 +152,9 @@ CONFIGURATION_VERSION=${CONFIGURATION_VERSION-$OPENEDX_RELEASE}
 ##
 ## Clone the configuration repository and run Ansible
 ##
-#cd /var/tmp/
-#git clone https://github.com/nikhilkanta/configuration
-cd ~/configuration
+cd /var/tmp/
+git clone https://github.com/nikhilkanta/configuration
+cd configuration
 git checkout $CONFIGURATION_VERSION
 git pull
 
